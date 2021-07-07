@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <TextView
+        android:id="@+id/feature_title_add"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginRight="36dp"
+        android:layout_marginTop="36dp"
+        android:text="Feature name:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/et_feature_title_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feature_title_add"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginRight="36dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="141dp" />
+
+    <TextView
+        android:id="@+id/feature_description_add"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginRight="36dp"
+        android:layout_marginTop="16dp"
+        android:text="Feature description:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_feature_title_add" />
+
+    <EditText
+        android:id="@+id/et_feature_description_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feature_description_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:lines="4"
+        android:layout_marginLeft="36dp"
+        android:layout_marginRight="36dp"
+        android:scrollbars="vertical"
+        android:scrollHorizontally="false"
+        tools:layout_editor_absoluteX="-11dp"
+        tools:layout_editor_absoluteY="327dp" />
+
+    <Button
+        android:id="@+id/add_new_feature"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="36dp"
+        android:layout_marginRight="36dp"
+        android:layout_marginBottom="36dp"
+        android:background="@drawable/final_add_button_outline"
+        android:fontFamily="@font/raleway_medium"
+        android:text="@string/add_button"
+        android:textColor="#996B5596"
+        android:textSize="24sp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

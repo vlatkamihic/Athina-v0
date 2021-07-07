@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Athina</string>
+    <string name="title_home">ATHINA</string>
+    <string name="title_planner">MY PLANNER</string>
+    <string name="title_profile">WHO AM I?</string>
+    <string name="settings">Notify</string>
+    <string name="back">Back</string>
+    <string name="add_button">Add</string>
+    <string name="title_activity_add_plan">AddPlan</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+</resources>

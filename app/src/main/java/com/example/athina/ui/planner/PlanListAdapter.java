@@ -32,9 +32,6 @@ public class PlanListAdapter extends RecyclerView.Adapter<PlanListAdapter.MyView
         notifyDataSetChanged();
     }
 
-    public void deletePlanFromList(Plan plan){
-        this.planList.remove(plan);
-    }
 
     @NonNull
     @NotNull
@@ -97,8 +94,6 @@ public class PlanListAdapter extends RecyclerView.Adapter<PlanListAdapter.MyView
 
     }
 
-    public Plan getPlanAt(int position){
-        return planList.get(position);
-    }
+
 
 }

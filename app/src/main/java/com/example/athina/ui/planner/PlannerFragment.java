@@ -17,15 +17,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.athina.ui.notifications.Notifications;
 import com.example.athina.R;
 import com.example.athina.database_plan.AppDatabasePlan;
 import com.example.athina.database_plan.Plan;
 import com.example.athina.databinding.FragmentPlannerBinding;
+import com.example.athina.ui.SimpleItemTouchHelperCallback;
+import com.example.athina.ui.notifications.Notifications;
 
 import java.util.List;
 
-public class PlannerFragment extends Fragment {
+public class PlannerFragment extends Fragment implements PlanListAdapter.OnItemRemoved {
     private PlannerViewModel dashboardViewModel;
     private FragmentPlannerBinding binding;
     private PlanListAdapter planListAdapter;
@@ -71,6 +72,11 @@ public class PlannerFragment extends Fragment {
 
         planListAdapter = new PlanListAdapter(this.requireActivity());
         planRecyclerView.setAdapter(planListAdapter);
+        planListAdapter.setDeleteListener(this);
+        ItemTouchHelper.Callback callback =
+                new SimpleItemTouchHelperCallback(planListAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(planRecyclerView);
         //new ItemTouchHelper(simpleCallback).attachToRecyclerView(planRecyclerView);
 
     }
@@ -81,34 +87,14 @@ public class PlannerFragment extends Fragment {
         planListAdapter.setPlanList(planList);
     }
 
-    private void deletePlan(){
+    @Override
+    public void onItemRemoved(Plan plan) {
+        deletePlan(plan);
+    }
+
+    private void deletePlan(Plan plan){
         AppDatabasePlan databasePlan = AppDatabasePlan.getDBInstance(this.getActivity().getApplicationContext());
-        List<Plan> planList = databasePlan.planDao().getAllPlans();
-
-        planListAdapter.setPlanList(planList);
-
-
-        simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                final int position = viewHolder.getAdapterPosition();
-                switch (direction) {
-                    case ItemTouchHelper.LEFT:
-                        Plan deletedPlan = null;
-                        deletedPlan = planList.get(position);
-                        planList.remove(position);
-                        planListAdapter.notifyItemRemoved(position);
-                        databasePlan.planDao().delete(deletedPlan);
-                        break;
-                }
-            }
-
-        };
+        databasePlan.planDao().delete(plan);
 
     }
 
@@ -140,4 +126,6 @@ public class PlannerFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
 }

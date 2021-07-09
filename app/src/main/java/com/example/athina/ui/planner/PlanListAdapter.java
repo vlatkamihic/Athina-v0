@@ -11,15 +11,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.athina.R;
 import com.example.athina.database_plan.Plan;
+import com.example.athina.ui.ItemTouchHelperAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class PlanListAdapter extends RecyclerView.Adapter<PlanListAdapter.MyViewHolder> {
+public class PlanListAdapter extends RecyclerView.Adapter<PlanListAdapter.MyViewHolder> implements ItemTouchHelperAdapter {
 
     private final Context context;
     private List<Plan> planList;
+    private OnItemRemoved deleteListener;
 
     public PlanListAdapter(Context context){
         this.context = context;
@@ -30,9 +32,6 @@ public class PlanListAdapter extends RecyclerView.Adapter<PlanListAdapter.MyView
         notifyDataSetChanged();
     }
 
-    public void deletePlanFromList(Plan plan){
-        this.planList.remove(plan);
-    }
 
     @NonNull
     @NotNull
@@ -56,6 +55,29 @@ public class PlanListAdapter extends RecyclerView.Adapter<PlanListAdapter.MyView
         return this.planList.size();
     }
 
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+
+    }
+
+    public void setDeleteListener(OnItemRemoved listener) {
+        deleteListener = listener;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        Plan plan = planList.get(position);
+        planList.remove(plan);
+        if (deleteListener != null) {
+            deleteListener.onItemRemoved(plan);
+        }
+        notifyItemRemoved(position);
+    }
+
+    interface OnItemRemoved {
+        void onItemRemoved(Plan plan);
+    }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder{
 
         TextView tvTitle;
@@ -72,8 +94,6 @@ public class PlanListAdapter extends RecyclerView.Adapter<PlanListAdapter.MyView
 
     }
 
-    public Plan getPlanAt(int position){
-        return planList.get(position);
-    }
+
 
 }

@@ -83,9 +83,8 @@ public class PlannerFragment extends Fragment {
 
     private void deletePlan(){
         AppDatabasePlan databasePlan = AppDatabasePlan.getDBInstance(this.getActivity().getApplicationContext());
-
-        //TODO kada napravis dodavanje plana pozvat liniju ispod da refresha listu planova
         List<Plan> planList = databasePlan.planDao().getAllPlans();
+
         planListAdapter.setPlanList(planList);
 
 

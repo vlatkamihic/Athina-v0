@@ -1,11 +1,8 @@
 package com.example.athina.ui.notifications;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 
 import com.example.athina.R;
 

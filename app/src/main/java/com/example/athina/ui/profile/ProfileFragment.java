@@ -1,5 +1,6 @@
 package com.example.athina.ui.profile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,19 +10,31 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.athina.R;
+import com.example.athina.database_plan.AppDatabasePlan;
+import com.example.athina.database_plan.Plan;
+import com.example.athina.database_profile.AppDatabaseProfile;
+import com.example.athina.database_profile.Feature;
 import com.example.athina.databinding.FragmentProfileBinding;
 import com.example.athina.ui.notifications.Notifications;
+
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
     private ProfileViewModel notificationsViewModel;
     private FragmentProfileBinding binding;
+    private FeatureListAdapter featureListAdapter;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -41,15 +54,43 @@ public class ProfileFragment extends Fragment {
             public void onClick(View arg0)
             {
                 // TODO Auto-generated method stub
-                Intent redirect = new Intent(getActivity(), AddFeature.class);
-                redirect.putExtra("some","some extra");
-                onDestroyView();
-                startActivity(redirect);
+                addRowFeature();
+                loadFeatureList();
             }
         });
 
+        initPlanRecyclerView(root);
+        loadFeatureList();
 
         return root;
+    }
+
+    private void addRowFeature() {
+        AppDatabaseProfile database = AppDatabaseProfile.getDBInstance(getActivity().getApplicationContext());
+
+        Feature feature = new Feature();
+        feature.text = "Input text";
+        feature.isSet = false;
+        database.featureDao().insertFeature(feature);
+
+        Toast.makeText(getActivity().getApplicationContext(), "New feature added!", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void loadFeatureList() {
+        AppDatabaseProfile databaseProfile = AppDatabaseProfile.getDBInstance(this.getActivity().getApplicationContext());
+        List<Feature> featureList = databaseProfile.featureDao().getAllFeatures();
+        featureListAdapter.setFeatureList(featureList);
+    }
+
+    private void initPlanRecyclerView(View root) {
+        RecyclerView featureRecyclerView = root.findViewById(R.id.recyclerView_Feature);
+        featureRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        featureListAdapter = new FeatureListAdapter(this.requireActivity());
+        featureRecyclerView.setAdapter(featureListAdapter);
+
+
     }
 
     //when clicked on bell icon
@@ -77,5 +118,11 @@ public class ProfileFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadFeatureList();
     }
 }

@@ -6,15 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.athina.R;
-import com.example.athina.database_plan.Plan;
+import com.example.athina.database_profile.AppDatabaseProfile;
 import com.example.athina.database_profile.Feature;
-import com.example.athina.ui.planner.PlanListAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +22,7 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
 
     private final Context context;
     private List<Feature> featureList;
+    boolean isClicked = false;
 
     public FeatureListAdapter(Context context){
         this.context = context;
@@ -32,6 +31,10 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
     public void setFeatureList(List<Feature> featureList){
         this.featureList = featureList;
         notifyDataSetChanged();
+    }
+
+    public List<Feature> getFeatureList(){
+        return  this.featureList;
     }
 
     @NonNull
@@ -45,12 +48,12 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull FeatureViewHolder holder, int position) {
-
+        holder.feature.setText(this.featureList.get(position).text);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return this.featureList.size();
     }
 
     public class FeatureViewHolder extends RecyclerView.ViewHolder{
@@ -62,7 +65,41 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
             super(view);
 
             feature = view.findViewById(R.id.editTextFeature);
+            feature.setEnabled(false);
             buttonFeature = view.findViewById(R.id.imageButtonFeature);
+
+            buttonFeature.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isClicked == false){
+                        feature.setEnabled(true);
+                        isClicked = true;
+
+                    }else{
+                        feature.setEnabled(false);
+                        isClicked = false;
+
+                        Feature featuree = new Feature();
+                        featuree.text =  feature.getText().toString();
+                        featuree.isSet = true;
+                        featureList.set(getPosition(), featuree);
+
+                        /*ProfileFragment profileFragment = new ProfileFragment();
+                        AppDatabaseProfile databaseProfile = profileFragment.getProfileFragmentDatabase();
+
+                        List<Feature> oldFeatures = databaseProfile.featureDao().getAllFeatures();
+                        for(int i = 0; i < oldFeatures.size(); i++){
+                            databaseProfile.featureDao().delete(oldFeatures.get(i));
+                        }
+
+                        for(int i = 0; i < featureList.size(); i++){
+                            databaseProfile.featureDao().insertFeature(featureList.get(i));
+                        }*/
+
+                        notifyDataSetChanged();
+                    }
+                }
+            });
         }
     }
 }

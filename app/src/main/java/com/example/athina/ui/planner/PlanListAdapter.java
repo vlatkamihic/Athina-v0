@@ -39,7 +39,6 @@ public class PlanListAdapter extends RecyclerView.Adapter<PlanListAdapter.MyView
     public PlanListAdapter.MyViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.plan_cell, parent, false);
 
-
         return new MyViewHolder(view);
     }
 

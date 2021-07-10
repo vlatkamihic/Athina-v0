@@ -91,6 +91,7 @@ public class ProfileFragment extends Fragment {
         featureRecyclerView.setAdapter(featureListAdapter);
 
 
+
     }
 
     //when clicked on bell icon

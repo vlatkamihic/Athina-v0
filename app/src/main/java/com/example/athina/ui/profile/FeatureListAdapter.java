@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.athina.R;
-import com.example.athina.database_profile.AppDatabaseProfile;
 import com.example.athina.database_profile.Feature;
 
 import org.jetbrains.annotations.NotNull;
@@ -83,18 +82,6 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
                         featuree.text =  feature.getText().toString();
                         featuree.isSet = true;
                         featureList.set(getPosition(), featuree);
-
-                        /*ProfileFragment profileFragment = new ProfileFragment();
-                        AppDatabaseProfile databaseProfile = profileFragment.getProfileFragmentDatabase();
-
-                        List<Feature> oldFeatures = databaseProfile.featureDao().getAllFeatures();
-                        for(int i = 0; i < oldFeatures.size(); i++){
-                            databaseProfile.featureDao().delete(oldFeatures.get(i));
-                        }
-
-                        for(int i = 0; i < featureList.size(); i++){
-                            databaseProfile.featureDao().insertFeature(featureList.get(i));
-                        }*/
 
                         notifyDataSetChanged();
                     }

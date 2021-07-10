@@ -1,8 +1,10 @@
-package com.example.athina;
+package com.example.athina.ui.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.athina.R;
 
 public class AddFeature extends AppCompatActivity {
 

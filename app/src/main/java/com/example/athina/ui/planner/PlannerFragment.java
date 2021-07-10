@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,7 +31,6 @@ public class PlannerFragment extends Fragment implements PlanListAdapter.OnItemR
     private PlannerViewModel dashboardViewModel;
     private FragmentPlannerBinding binding;
     private PlanListAdapter planListAdapter;
-    ItemTouchHelper.SimpleCallback simpleCallback;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +52,7 @@ public class PlannerFragment extends Fragment implements PlanListAdapter.OnItemR
             }
         });
 
+
         //action_bar_menu called
         setHasOptionsMenu(true);
 
@@ -60,6 +61,7 @@ public class PlannerFragment extends Fragment implements PlanListAdapter.OnItemR
 
         return root;
     }
+
 
     private void initPlanRecyclerView(View root) {
         RecyclerView planRecyclerView = root.findViewById(R.id.recyclerView_Plan);
@@ -122,4 +124,13 @@ public class PlannerFragment extends Fragment implements PlanListAdapter.OnItemR
     public void onItemRemoved(Plan plan) {
         deletePlan(plan);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadPlanList(); //request method
+    }
+
+
+
 }

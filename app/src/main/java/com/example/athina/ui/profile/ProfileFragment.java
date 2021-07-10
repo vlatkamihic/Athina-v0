@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.athina.AddFeature;
 import com.example.athina.R;
 import com.example.athina.databinding.FragmentProfileBinding;
 import com.example.athina.ui.notifications.Notifications;

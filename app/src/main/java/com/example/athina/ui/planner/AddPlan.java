@@ -12,10 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.athina.MainActivity;
 import com.example.athina.R;
 import com.example.athina.database_plan.AppDatabasePlan;
 import com.example.athina.database_plan.Plan;
-import com.example.athina.ui.planner.PlannerFragment;
+
+import java.util.List;
 
 public class AddPlan extends AppCompatActivity {
 
@@ -30,6 +32,7 @@ public class AddPlan extends AppCompatActivity {
         EditText planTitle = findViewById(R.id.et_plan_title_add);
         EditText planDescription = findViewById(R.id.et_plan_description_add);
         Button addPlanButton = findViewById(R.id.add_new_plan);
+
         addPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,19 +40,13 @@ public class AddPlan extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Cannot add empty plan!", Toast.LENGTH_SHORT).show();
                 }else{
                     saveNewPlan(planTitle.getText().toString(), planDescription.getText().toString());
-                    planTitle.getText().clear();
-                    planTitle.clearFocus();
-                    planDescription.getText().clear();
-                    planDescription.clearFocus();
-                    Fragment fragment = new PlannerFragment();
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.navigation_planner, fragment, fragment.getClass().getSimpleName())
-                            .commit();
+                    finish();
                 }
             }
         });
 
     }
+
 
     private void saveNewPlan(String title, String description){
         AppDatabasePlan database = AppDatabasePlan.getDBInstance(this.getApplicationContext());

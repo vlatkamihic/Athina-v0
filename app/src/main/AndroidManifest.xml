@@ -18,7 +18,7 @@
             android:name=".ui.notifications.Notifications"
             android:label="NOTIFICATIONS" />
         <activity
-            android:name=".AddFeature"
+            android:name=".ui.profile.AddFeature"
             android:label="PERSONALIZE" />
         <activity
             android:name=".ui.planner.AddPlan"

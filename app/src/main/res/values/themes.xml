@@ -19,13 +19,4 @@
         <item name="android:fontFamily">@font/raleway_light</item>
     </style>
 
-    <style name="Theme.Athina.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.Athina.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.Athina.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 </resources>

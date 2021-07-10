@@ -1,11 +1,14 @@
 package com.example.athina.ui.profile;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +24,8 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
 
     private final Context context;
     private List<Feature> featureList;
-    boolean isClicked = false;
+    //boolean isClicked = false;
+    Dialog featureDialog;
 
     public FeatureListAdapter(Context context){
         this.context = context;
@@ -42,7 +46,16 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
     public FeatureViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.feature_cell, parent, false);
 
-        return new FeatureViewHolder(view);
+        FeatureViewHolder featureViewHolder = new FeatureViewHolder(view);
+
+        featureViewHolder.buttonFeature.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "testing", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return featureViewHolder;
     }
 
     @Override
@@ -67,7 +80,8 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
             feature.setEnabled(false);
             buttonFeature = view.findViewById(R.id.imageButtonFeature);
 
-            buttonFeature.setOnClickListener(new View.OnClickListener() {
+
+            /*buttonFeature.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(isClicked == false){
@@ -86,7 +100,7 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
                         notifyDataSetChanged();
                     }
                 }
-            });
+            });*/
         }
     }
 }

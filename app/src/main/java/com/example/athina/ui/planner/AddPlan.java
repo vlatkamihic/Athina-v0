@@ -1,6 +1,8 @@
 package com.example.athina.ui.planner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
@@ -35,6 +37,14 @@ public class AddPlan extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Cannot add empty plan!", Toast.LENGTH_SHORT).show();
                 }else{
                     saveNewPlan(planTitle.getText().toString(), planDescription.getText().toString());
+                    planTitle.getText().clear();
+                    planTitle.clearFocus();
+                    planDescription.getText().clear();
+                    planDescription.clearFocus();
+                    Fragment fragment = new PlannerFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.navigation_planner, fragment, fragment.getClass().getSimpleName())
+                            .commit();
                 }
             }
         });
@@ -50,7 +60,7 @@ public class AddPlan extends AppCompatActivity {
         database.planDao().insertFeature(plan);
 
         Toast.makeText(getApplicationContext(), "New plan was made!", Toast.LENGTH_SHORT).show();
-        finish();
+
     }
 
     @Override

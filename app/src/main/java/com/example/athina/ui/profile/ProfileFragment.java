@@ -29,7 +29,7 @@ import com.example.athina.ui.notifications.Notifications;
 
 import java.util.List;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment{
 
     private ProfileViewModel notificationsViewModel;
     private FragmentProfileBinding binding;
@@ -64,6 +64,7 @@ public class ProfileFragment extends Fragment {
 
         return root;
     }
+
 
     private void addRowFeature() {
         AppDatabaseProfile database = AppDatabaseProfile.getDBInstance(getActivity().getApplicationContext());
@@ -126,4 +127,5 @@ public class ProfileFragment extends Fragment {
         super.onStart();
         loadFeatureList();
     }
+
 }

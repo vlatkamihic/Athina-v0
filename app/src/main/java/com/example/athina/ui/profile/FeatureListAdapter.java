@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.athina.R;
+import com.example.athina.database_plan.Plan;
 import com.example.athina.database_profile.Feature;
 
 import org.jetbrains.annotations.NotNull;
@@ -24,8 +26,6 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
 
     private final Context context;
     private List<Feature> featureList;
-    //boolean isClicked = false;
-    Dialog featureDialog;
 
     public FeatureListAdapter(Context context){
         this.context = context;
@@ -47,13 +47,6 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
         View view = LayoutInflater.from(context).inflate(R.layout.feature_cell, parent, false);
 
         FeatureViewHolder featureViewHolder = new FeatureViewHolder(view);
-
-        featureViewHolder.buttonFeature.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "testing", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         return featureViewHolder;
     }
@@ -81,26 +74,21 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
             buttonFeature = view.findViewById(R.id.imageButtonFeature);
 
 
-            /*buttonFeature.setOnClickListener(new View.OnClickListener() {
+            buttonFeature.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(isClicked == false){
-                        feature.setEnabled(true);
-                        isClicked = true;
 
-                    }else{
-                        feature.setEnabled(false);
-                        isClicked = false;
 
-                        Feature featuree = new Feature();
+                        /*Feature featuree = new Feature();
                         featuree.text =  feature.getText().toString();
                         featuree.isSet = true;
                         featureList.set(getPosition(), featuree);
 
                         notifyDataSetChanged();
-                    }
+                    */
                 }
-            });*/
+            });
         }
     }
+
 }

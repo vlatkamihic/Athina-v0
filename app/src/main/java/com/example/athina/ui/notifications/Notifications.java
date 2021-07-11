@@ -2,14 +2,18 @@ package com.example.athina.ui.notifications;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.athina.R;
 
 public class Notifications extends AppCompatActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +22,7 @@ public class Notifications extends AppCompatActivity {
 
         assert getSupportActionBar() != null;   //null check
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //show back button
+
 
         Button addNotification = (Button) findViewById(R.id.add_notification_button);
         addNotification.setOnClickListener(new View.OnClickListener() {

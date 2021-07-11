@@ -10,6 +10,7 @@
         android:background="@color/background">
 
         <TextView
+            android:id="@+id/notifName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/raleway_semibold"
@@ -23,10 +24,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/dataTime"/>
+            app:layout_constraintBottom_toTopOf="@id/dateTime"/>
 
         <TextView
-            android:id="@+id/dataTime"
+            android:id="@+id/dateTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/raleway"

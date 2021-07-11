@@ -1,9 +1,12 @@
 package com.example.athina.ui.notifications;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.TimePickerDialog;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,8 +20,6 @@ import android.widget.Toast;
 import com.example.athina.R;
 import com.example.athina.database_notifications.AppDatabaseNotifications;
 import com.example.athina.database_notifications.Notification;
-import com.example.athina.database_plan.AppDatabasePlan;
-import com.example.athina.database_plan.Plan;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -29,11 +30,11 @@ public class AddNotification extends AppCompatActivity implements DatePickerDial
     DatePickerDialog datePickerDialog;
     TimePickerDialog timePickerDialog;
 
-    Date tempDate;
-    Time tempTime;
+    private Date tempDate;
+    private Time tempTime;
 
-    boolean isTimePicked = false;
-    boolean isDatePicked = false;
+    private boolean isTimeSet;
+    private boolean isDateSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +48,15 @@ public class AddNotification extends AppCompatActivity implements DatePickerDial
         EditText nDescription = (EditText) findViewById(R.id.et_description_add);
 
 
+        isDateSet = false;
+        isTimeSet = false;
 
         Button nDate = (Button) findViewById(R.id.button_add_date);
         nDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDatePickerDialog();
-                isDatePicked = true;
+                isDateSet = true;
             }
 
         });
@@ -63,18 +66,26 @@ public class AddNotification extends AppCompatActivity implements DatePickerDial
             @Override
             public void onClick(View v) {
                 showTimePickerDialog();
-                isTimePicked = true;
+                isTimeSet = true;
             }
         });
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel("NotificationChannel", "NotificationChannel", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
 
         Button saveButton = (Button) findViewById(R.id.saveFeature);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(nName.getText().toString().isEmpty() || nDescription.getText().toString().isEmpty() || isTimePicked || isDatePicked){
+                if(nName.getText().toString().isEmpty() || nDescription.getText().toString().isEmpty() || !isDateSet || !isTimeSet ){
                     Toast.makeText(getApplicationContext(), "Cannot add empty plan!", Toast.LENGTH_SHORT).show();
                 }else{
-                    saveNewNotification(nName.getText().toString(), nDescription.getText().toString());
+                    int id = saveNewNotification(nName.getText().toString(), nDescription.getText().toString());
+                    makeNotification(nName.getText().toString(), nDescription.getText().toString(), id);
+
                     finish();
                 }
             }
@@ -82,18 +93,35 @@ public class AddNotification extends AppCompatActivity implements DatePickerDial
 
     }
 
-    private void saveNewNotification(String nName, String nDescription) {
+    private void makeNotification(String nName, String nDescription, int id) {
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(AddNotification.this, "NotificationBuilder");
+        builder.setContentTitle(nName);
+        builder.setContentText(nDescription);
+        builder.setSmallIcon(R.drawable.ic_notifications_black_24dp);
+        builder.setAutoCancel(true);
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(AddNotification.this);
+        managerCompat.notify(id, builder.build());
+
+    }
+
+    private int saveNewNotification(String nName, String nDescription) {
         AppDatabaseNotifications database = AppDatabaseNotifications.getDBInstance(this.getApplicationContext());
 
         Notification notification = new Notification();
         notification.nTitle = nName;
         notification.nDescription = nDescription;
-        notification.nDate = tempDate;
-        notification.nTime = tempTime;
+        notification.nYear = tempDate.getYear();
+        notification.nMonth = tempDate.getMonth();
+        notification.nDay = tempDate.getDay();
+        notification.nHour = tempTime.getHours();
+        notification.nMinute = tempTime.getMinutes();
 
         database.notificationDao().insertNotification(notification);
 
         Toast.makeText(getApplicationContext(), "New notification was made!", Toast.LENGTH_SHORT).show();
+        return notification.uid;
     }
 
     private void showDatePickerDialog(){
@@ -120,6 +148,7 @@ public class AddNotification extends AppCompatActivity implements DatePickerDial
                 Calendar.getInstance().get(Calendar.MINUTE),
                 true
         );
+        timePickerDialog.show();
     }
 
     @Override

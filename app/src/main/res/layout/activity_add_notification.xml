@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lineHeight="24dp"
-        android:text="Description"
+        android:hint="Description"
         android:textColor="@color/purple_200"
         android:fontFamily="@font/raleway"
         android:theme="@style/MyEditText"

@@ -1,19 +1,23 @@
 package com.example.athina.ui.notifications;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.example.athina.R;
+import com.example.athina.database_notifications.AppDatabaseNotifications;
+import com.example.athina.database_notifications.Notification;
+
+import java.util.List;
 
 public class Notifications extends AppCompatActivity {
 
-
+    private NotificationsListAdapter notificationsListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,25 @@ public class Notifications extends AppCompatActivity {
             }
         });
 
+        initNotificationRecyclerView();
+        loadNotificationList();
+
+    }
+
+    private void loadNotificationList() {
+        AppDatabaseNotifications databaseNotifications = AppDatabaseNotifications.getDBInstance(this.getApplicationContext());
+        List<Notification> notifications = databaseNotifications.notificationDao().getAllNotifications();
+        notificationsListAdapter.setNotificationList(notifications);
+
+    }
+
+    private void initNotificationRecyclerView() {
+        RecyclerView notificationRecyclerView = findViewById(R.id.recyclerView_Notifications);
+        notificationRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        notificationsListAdapter = new NotificationsListAdapter(this);
+        notificationRecyclerView.setAdapter(notificationsListAdapter);
+
     }
 
     @Override
@@ -41,4 +64,15 @@ public class Notifications extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadNotificationList();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadNotificationList();
+    }
 }

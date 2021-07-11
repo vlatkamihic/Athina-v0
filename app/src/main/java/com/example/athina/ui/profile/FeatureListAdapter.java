@@ -9,23 +9,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.athina.R;
 import com.example.athina.database_plan.Plan;
 import com.example.athina.database_profile.Feature;
+import com.example.athina.ui.ItemTouchHelperAdapter;
+import com.example.athina.ui.planner.PlanListAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.FeatureViewHolder>{
+public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.FeatureViewHolder> implements  ItemTouchHelperAdapter{
 
     private final Context context;
     private List<Feature> featureList;
+    private OnFeatureRemoved deleteListener;
 
     public FeatureListAdapter(Context context){
         this.context = context;
@@ -36,9 +41,6 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
         notifyDataSetChanged();
     }
 
-    public List<Feature> getFeatureList(){
-        return  this.featureList;
-    }
 
     @NonNull
     @NotNull
@@ -61,34 +63,40 @@ public class FeatureListAdapter extends RecyclerView.Adapter<FeatureListAdapter.
         return this.featureList.size();
     }
 
+
+
     public class FeatureViewHolder extends RecyclerView.ViewHolder{
 
-        EditText feature;
-        ImageButton buttonFeature;
+        TextView feature;
 
         public FeatureViewHolder(View view) {
             super(view);
 
             feature = view.findViewById(R.id.editTextFeature);
-            feature.setEnabled(false);
-            buttonFeature = view.findViewById(R.id.imageButtonFeature);
-
-
-            buttonFeature.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                        /*Feature featuree = new Feature();
-                        featuree.text =  feature.getText().toString();
-                        featuree.isSet = true;
-                        featureList.set(getPosition(), featuree);
-
-                        notifyDataSetChanged();
-                    */
-                }
-            });
         }
+    }
+
+    public void setDeleteListener(OnFeatureRemoved listener) {
+        deleteListener = listener;
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        Feature feature = featureList.get(position);
+        featureList.remove(feature);
+        if (deleteListener != null) {
+            deleteListener.onFeatureRemoved(feature);
+        }
+        notifyItemRemoved(position);
+    }
+
+    interface OnFeatureRemoved {
+        void onFeatureRemoved(Feature feature);
     }
 
 }

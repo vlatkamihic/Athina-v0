@@ -15,31 +15,71 @@
         android:fontFamily="@font/raleway_light_italic"
         android:paddingLeft="36sp"
         android:paddingRight="36sp"
-        android:paddingTop="56sp"
+        android:paddingTop="36sp"
         android:layout_marginTop="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
+        android:paddingBottom="24dp"
         android:translationZ="0dp"
         android:background="@color/background"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@id/recyclerView_Feature"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="24dp"
+        android:layout_marginLeft="24dp"
+        android:fontFamily="@font/raleway"
+        android:lineHeight="36dp"
+        android:background="@drawable/button_outside_shape"
+        android:theme="@style/MyEditText"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:textSize="16sp"
+        android:hint="Enter your name"
+        android:textColorHint="@color/purple_200"
+        android:textColor="@color/purple_200"
+        android:paddingLeft="16dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/quoteProfile"
+        app:layout_constraintBottom_toTopOf="@id/recyclerView_Feature"/>
+
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_Feature"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="104dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_add"
+        android:layout_height= "0dp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/quoteProfile" />
+        app:layout_constraintTop_toBottomOf="@id/name"
+        app:layout_constraintBottom_toTopOf="@id/editTextFeatureEdit"/>
 
 
-
+    <EditText
+        android:id="@+id/editTextFeatureEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/MyEditText"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="24dp"
+        android:fontFamily="@font/raleway"
+        android:hint="Enter feature"
+        android:textColorHint="@color/purple_200"
+        app:layout_constraintBottom_toTopOf="@id/button_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/button_add"

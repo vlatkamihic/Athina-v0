@@ -11,17 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.athina.R;
 import com.example.athina.database_notifications.Notification;
+import com.example.athina.database_plan.Plan;
+import com.example.athina.ui.ItemTouchHelperAdapter;
+import com.example.athina.ui.planner.PlanListAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class NotificationsListAdapter extends RecyclerView.Adapter<NotificationsListAdapter.NotificationViewHolder> {
+public class NotificationsListAdapter extends RecyclerView.Adapter<NotificationsListAdapter.NotificationViewHolder> implements ItemTouchHelperAdapter {
 
 
     private final Context context;
     private List<Notification> notificationList;
-    //private OnItemRemoved deleteListener;
+    private OnNotifRemoved deleteListener;
 
     public NotificationsListAdapter(Context context){
         this.context = context;
@@ -77,5 +80,28 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
             nName = (TextView) itemView.findViewById(R.id.notifName);
             nDateTime = (TextView) itemView.findViewById(R.id.dateTime);
         }
+    }
+
+    public void setDeleteListener(OnNotifRemoved listener) {
+        deleteListener = listener;
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        Notification notification = notificationList.get(position);
+        notificationList.remove(notification);
+        if (deleteListener != null) {
+            deleteListener.onNotifRemoved(notification);
+        }
+        notifyItemRemoved(position);
+    }
+
+    interface OnNotifRemoved {
+        void onNotifRemoved(Notification notification);
     }
 }

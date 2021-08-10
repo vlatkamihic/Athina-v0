@@ -21,20 +21,11 @@
         android:translationZ="0dp"
         android:background="@color/background"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@id/scrollable"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
-        android:id="@+id/scrollable"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:translationZ="-1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+
 
         <ImageView
             android:id="@+id/imageView"
@@ -42,9 +33,10 @@
             android:layout_height="0dp"
             android:scrollbars="vertical"
             android:src="@drawable/homepage_imagee"
+            app:layout_constraintTop_toBottomOf="@id/quoteHomepage"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

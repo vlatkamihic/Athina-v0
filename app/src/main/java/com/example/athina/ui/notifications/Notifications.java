@@ -1,9 +1,11 @@
 package com.example.athina.ui.notifications;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,10 +14,11 @@ import android.widget.Button;
 import com.example.athina.R;
 import com.example.athina.database_notifications.AppDatabaseNotifications;
 import com.example.athina.database_notifications.Notification;
+import com.example.athina.ui.SimpleItemTouchHelperCallback;
 
 import java.util.List;
 
-public class Notifications extends AppCompatActivity {
+public class Notifications extends AppCompatActivity implements NotificationsListAdapter.OnNotifRemoved{
 
     private NotificationsListAdapter notificationsListAdapter;
 
@@ -56,6 +59,12 @@ public class Notifications extends AppCompatActivity {
         notificationsListAdapter = new NotificationsListAdapter(this);
         notificationRecyclerView.setAdapter(notificationsListAdapter);
 
+        notificationsListAdapter.setDeleteListener(this);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(notificationsListAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+
+        touchHelper.attachToRecyclerView(notificationRecyclerView);
+
     }
 
     @Override
@@ -74,5 +83,19 @@ public class Notifications extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadNotificationList();
+    }
+
+    @Override
+    public void onNotifRemoved(Notification notification) {
+        deleteNotification(notification);
+    }
+
+    private void deleteNotification(Notification notification) {
+        AppDatabaseNotifications databaseNotifications = AppDatabaseNotifications.getDBInstance(getApplicationContext());
+
+        databaseNotifications.notificationDao().delete(notification);
+
+        /*NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.cancel(notification.uid)*/
     }
 }

@@ -17,6 +17,9 @@ public class Notification {
     @ColumnInfo(name = "notificationTitle")
     public String nTitle;
 
+    @ColumnInfo(name = "alarmId")
+    public int nAlarmId;
+
     @ColumnInfo(name = "notificationDescription")
     public String nDescription;
 

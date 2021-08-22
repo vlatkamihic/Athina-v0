@@ -1,10 +1,5 @@
 package com.example.athina.ui.notifications;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
-//import android.app.AlarmManager;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
@@ -13,11 +8,9 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -25,24 +18,18 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.athina.R;
 import com.example.athina.database_notifications.AppDatabaseNotifications;
 import com.example.athina.database_notifications.Notification;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.Calendar;
 
-import static android.graphics.Color.rgb;
-
-public class AddNotification extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
+public class AddNotification extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     DatePickerDialog datePickerDialog;
     TimePickerDialog timePickerDialog;
-
-    public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
-    private Date tempDate;
-    private Time tempTime;
 
     private boolean isTimeSet;
     private boolean isDateSet;
@@ -52,8 +39,6 @@ public class AddNotification extends AppCompatActivity implements DatePickerDial
     private int day;
     private int hour;
     private int minute;
-
-    //NotificationBroadcast broadcast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +50,6 @@ public class AddNotification extends AppCompatActivity implements DatePickerDial
 
         EditText nName = (EditText) findViewById(R.id.editTextTitleNotif);
         EditText nDescription = (EditText) findViewById(R.id.et_description_add);
-
 
         isDateSet = false;
         isTimeSet = false;
@@ -89,36 +73,14 @@ public class AddNotification extends AppCompatActivity implements DatePickerDial
             }
         });
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel channel = new NotificationChannel("NotificationChannel", "NotificationChannel", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
-
-
         Button saveButton = (Button) findViewById(R.id.saveFeature);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(nName.getText().toString().isEmpty() || nDescription.getText().toString().isEmpty() || !isDateSet || !isTimeSet ){
+                if (nName.getText().toString().isEmpty() || nDescription.getText().toString().isEmpty() || !isDateSet || !isTimeSet) {
                     Toast.makeText(getApplicationContext(), "Cannot add empty plan!", Toast.LENGTH_SHORT).show();
-                }else{
-                    int id = saveNewNotification(nName.getText().toString(), nDescription.getText().toString());
-
-                    Calendar timeFuture = Calendar.getInstance();
-                    timeFuture.set(Calendar.YEAR, year);
-                    timeFuture.set(Calendar.MONTH, month);
-                    timeFuture.set(Calendar.DAY_OF_MONTH, day);
-                    timeFuture.set(Calendar.HOUR_OF_DAY, hour);
-                    timeFuture.set(Calendar.MINUTE, minute);
-                    timeFuture.set(Calendar.SECOND, 0);
-
-                    long diff = timeFuture.getTimeInMillis();
-
-                    scheduleNotification(AddNotification.this, nName.getText().toString(), nDescription.getText().toString(), diff, id);
-
-                    //makeNotification(nName.getText().toString(), nDescription.getText().toString(), id);
-
+                } else {
+                    saveAndScheduleNotification(nName.getText().toString(), nDescription.getText().toString());
                     finish();
                 }
             }
@@ -126,96 +88,66 @@ public class AddNotification extends AppCompatActivity implements DatePickerDial
 
     }
 
-    public void scheduleNotification(Context context, String nName, String nDescription, long delay, int notificationId)
-    {
-        //delay is after how much time(in millis) from current time you want to schedule the notification
-        /*NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default")
-                .setContentTitle(nName)
-                .setContentText(nDescription)
-                .setAutoCancel(true)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(nDescription))
-                .setChannelId( NOTIFICATION_CHANNEL_ID )
-                .setColor(rgb(237, 234, 238));
-
-        android.app.Notification notification = builder.build();
-
-        Intent notificationIntent = new Intent( this, NotificationBroadcast. class ) ;
-        notificationIntent.putExtra(NotificationBroadcast. NOTIFICATION_ID , 1 ) ;
-        notificationIntent.putExtra(NotificationBroadcast. NOTIFICATION , notification) ;
-        PendingIntent pendingIntent = PendingIntent. getBroadcast ( this, 0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT ) ;
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE ) ;
-        assert alarmManager != null;
-        alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , delay , pendingIntent) ;
-*/
-
-        Intent intent = new Intent(context, NotificationBroadcast.class);
-        intent.putExtra("notificationId", notificationId);
-        intent.putExtra("todo", nDescription);
-        intent.putExtra("title", nName);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, delay, pendingIntent);
-
-    }
-
-    /*private void makeNotification(String nName, String nDescription, int id) {
-
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(tempDate.getYear(), tempDate.getMonth(), tempDate.getDay(),
-                tempTime.getHours(), tempTime.getMinutes(), 0);
-        long milisdateAndTime = calendar.getTimeInMillis();
-
-        broadcast = new NotificationBroadcast();
-
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel channel = new NotificationChannel("NotificationChannel", "NotificationChannel", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
-
-
-        String dateAndTime = tempDate.getYear() + "-" + tempDate.getMonth() + "-" + tempDate.getDay() + " " + tempTime.getHours() + ":" + tempTime.getMinutes() + ":00";
-
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(AddNotification.this, "NotificationBuilder");
-        builder.setContentTitle(nName);
-        builder.setContentText(dateAndTime);
-        builder.setSmallIcon(R.drawable.ic_notifications_black_24dp);
-        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(nDescription));
-        builder.setChannelId("NotificationChannel");
-        builder.setColor(rgb(237, 234, 238));
-
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(AddNotification.this);
-        managerCompat.notify(id, builder.build());
-
-    }*/
-
-    private int saveNewNotification(String nName, String nDescription) {
+    private int saveAndScheduleNotification(String nName, String nDescription) {
         AppDatabaseNotifications database = AppDatabaseNotifications.getDBInstance(this.getApplicationContext());
 
         Notification notification = new Notification();
         notification.nTitle = nName;
+
+        long alarmTime = getDateTimeFromSelectedValues();
+        notification.nAlarmId = (int) alarmTime;
+
         notification.nDescription = nDescription;
-        notification.nYear = tempDate.getYear();
-        notification.nMonth = tempDate.getMonth() + 1;
-        notification.nDay = tempDate.getDate();
-        notification.nHour = tempTime.getHours();
-        notification.nMinute = tempTime.getMinutes();
+
+        notification.nYear = year;
+        notification.nMonth = month;
+        notification.nDay = day;
+        notification.nHour = hour;
+        notification.nMinute = minute;
 
         database.notificationDao().insertNotification(notification);
-
+        addAlarm(alarmTime, notification.nTitle, notification.nDescription);
         Toast.makeText(getApplicationContext(), "New notification was made!", Toast.LENGTH_SHORT).show();
         return notification.uid;
     }
 
-    private void showDatePickerDialog(){
+    public long getDateTimeFromSelectedValues() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, 0);
+        Log.d("NOTIFICATION", "addAlarm: day: " + day);
+        Log.d("NOTIFICATION", "addAlarm: month: " + month);
+        Log.d("NOTIFICATION", "addAlarm: year: " + year);
+        Log.d("NOTIFICATION", "addAlarm: hour: " + hour);
+        Log.d("NOTIFICATION", "addAlarm: minute: " + minute);
+        return cal.getTimeInMillis();
+    }
+
+
+    private void addAlarm(long timeToSet, String name, String description) {
+        long alarmTime = 0L;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timeToSet);
+        alarmTime = calendar.getTimeInMillis();
+        Log.d("NOTIFICATION", "addAlarm: alarm will trigger in: " + calendar.getTime());
+        PendingIntent alarmIntent = getAlarmIntent(alarmTime, description, name);
+        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC, alarmTime, alarmIntent);
+    }
+
+    private PendingIntent getAlarmIntent(long alarmId, String description, String name) {
+        Intent intent = new Intent(getApplicationContext(), NotificationBroadcast.class);
+        intent.putExtra("todo", description);
+        intent.putExtra("title", name);
+        intent.setAction("notification_action");
+        return PendingIntent.getBroadcast(getApplicationContext(), (int) alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private void showDatePickerDialog() {
         datePickerDialog = new DatePickerDialog(
                 this,
                 R.style.DialogTheme,
@@ -228,11 +160,10 @@ public class AddNotification extends AppCompatActivity implements DatePickerDial
     }
 
     @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        tempDate = new Date(year, month, dayOfMonth);
+    public void onDateSet(DatePicker view, int year, int month, int day) {
         this.year = year;
         this.month = month;
-        this.day = dayOfMonth;
+        this.day = day;
     }
 
     private void showTimePickerDialog() {
@@ -249,7 +180,6 @@ public class AddNotification extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        tempTime = new Time(hourOfDay, minute, 0);
         this.hour = hourOfDay;
         this.minute = minute;
     }
@@ -259,5 +189,4 @@ public class AddNotification extends AppCompatActivity implements DatePickerDial
         finish();
         return true;
     }
-
 }

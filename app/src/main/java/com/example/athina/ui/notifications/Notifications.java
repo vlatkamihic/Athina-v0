@@ -5,7 +5,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -35,8 +38,8 @@ public class Notifications extends AppCompatActivity implements NotificationsLis
         addNotification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                        Intent redirect = new Intent(v.getContext() , AddNotification.class);
-                        startActivity(redirect);
+                Intent redirect = new Intent(v.getContext() , AddNotification.class);
+                startActivity(redirect);
             }
         });
 
@@ -92,10 +95,19 @@ public class Notifications extends AppCompatActivity implements NotificationsLis
 
     private void deleteNotification(Notification notification) {
         AppDatabaseNotifications databaseNotifications = AppDatabaseNotifications.getDBInstance(getApplicationContext());
-
+        cancelAlarm(notification);
         databaseNotifications.notificationDao().delete(notification);
 
         /*NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.cancel(notification.uid)*/
+    }
+
+    private void cancelAlarm(Notification notification){
+        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getApplicationContext(), NotificationBroadcast.class);
+        intent.setAction("notification_action");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), notification.nAlarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(pendingIntent);
+        pendingIntent.cancel();
     }
 }
